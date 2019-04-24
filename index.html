@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <!--
+  ArcGIS API for JavaScript, https://js.arcgis.com
+  For more information about the intro-mapview sample, read the original sample description at developers.arcgis.com.
+  https://developers.arcgis.com/javascript/latest/sample-code/intro-mapview/index.html
+  -->
+<title>Intro to MapView - Create a 2D map - 4.11</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.11/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.11/"></script>
+
+    <script>
+      require(["esri/Map", "esri/views/MapView","esri/layers/CSVLayer"], function(Map, MapView,CSVLayer) {
+        var map = new Map({
+          basemap: "streets"
+        });
+
+        var view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 10,
+          center: [114.3, 30.5] // longitude, latitude
+        });
+        
+        
+        
+        const symbol = {
+          type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+          path: "M14.5,29 23.5,0 14.5,9 5.5,0z",
+          color: "#ffff00",
+          outline: {
+            color: [0, 0.7, 0.7, 0.7],
+            width: 0.5
+          },
+          angle: 180,
+          size: 15
+        };
+        
+        const rotationRenderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          symbol: symbol,
+          visualVariables: [
+            {
+              type: "rotation",
+              field: "T_Heading",
+              rotationType: "geographic"
+            },
+            {
+              type: "size",
+              field: "T_Speed",
+              minDataValue: 0,
+              maxDataValue: 60,
+              minSize: 8,
+              maxSize: 40
+            }
+          ]
+        };
+        
+        var csvlayer = new CSVLayer({
+        	url:"https://cxqttkl.github.io/web4gis15/wuhangps-tiny.csv",
+        	latitudeField:"Lat",
+		    longitudeField:"Long",
+		    renderer: rotationRenderer
+
+
+        });
+        map.add(csvlayer);
+
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>

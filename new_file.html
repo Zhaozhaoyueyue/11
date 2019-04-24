@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Intro to MapView - Create a 2D map - 4.11</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.11/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.11/"></script>
+
+    <script>
+      require(["esri/Map", "esri/views/MapView","esri/layers/GeoJSONLayer"], function(Map, MapView,GeoJSONLayer) {
+        var map = new Map({
+          basemap: "streets"
+        });
+
+        var view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 3,
+          center: [-168, 46] // longitude, latitude
+        });
+        
+        const defaultSym = {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          outline: {
+            // autocasts as new SimpleLineSymbol()
+            color: [128, 128, 128, 0.2],
+            width: "0.5px"
+          }
+        };
+      const renderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          symbol: defaultSym,
+          visualVariables: [
+            {
+              type: "color",
+              field: "pop2000",  
+              stops: [
+                {
+                  value: 440000,
+                  color: "#FFFCD4"
+                },
+                {
+                  value: 91236854,
+                  color: "#350242"
+                }
+              ]
+            }
+          ]
+        };
+      var geojlayer = new GeoJSONLayer({
+        	url:"https://raw.githubusercontent.com/fire0808/08/master/chinawgs84.json",
+        	renderer:renderer
+      });
+      map.add(geojlayer);
+      });
+      
+      
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
